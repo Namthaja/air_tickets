@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تذاكر الطيران</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0A1628;
+    --navy2: #112240;
+    --blue: #1B4FD8;
+    --blue-light: #2563EB;
+    --gold: #F59E0B;
+    --gold-light: #FCD34D;
+    --green: #10B981;
+    --red: #EF4444;
+    --gray: #94A3B8;
+    --border: rgba(255,255,255,0.08);
+    --card: rgba(255,255,255,0.04);
+    --text: #E2E8F0;
+    --text2: #94A3B8;
+  }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #0A1628 0%, #112240 50%, #0A1F44 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .header-logo .icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--blue), var(--blue-light));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .emp-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .emp-selector label {
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  .emp-selector select {
+    background: #1e3a5f;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: white;
+    padding: 6px 12px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    direction: rtl;
+  }
+  .emp-selector select option {
+    background: #1e3a5f;
+    color: white;
+  }
+
+  /* MAIN */
+  .main { padding: 2rem; max-width: 1100px; margin: 0 auto; }
+
+  /* EMPLOYEE CARD */
+  .emp-card {
+    background: linear-gradient(135deg, #112240 0%, #0A1F44 100%);
+    border: 1px solid rgba(27,79,216,0.3);
+    border-radius: 20px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .emp-card::before {
+    content: '✈';
+    position: absolute;
+    left: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 80px;
+    opacity: 0.05;
+    pointer-events: none;
+  }
+
+  .emp-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--blue-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    flex-shrink: 0;
+    border: 2px solid rgba(37,99,235,0.4);
+  }
+
+  .emp-info { flex: 1; }
+
+  .emp-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 4px;
+  }
+
+  .emp-meta {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .emp-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  .emp-meta-item span { color: var(--text); font-weight: 500; }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.25rem;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .stat-card:hover { transform: translateY(-2px); border-color: rgba(27,79,216,0.4); }
+
+  .stat-num {
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label { font-size: 12px; color: var(--text2); }
+
+  .stat-card.blue .stat-num { color: #60A5FA; }
+  .stat-card.green .stat-num { color: var(--green); }
+  .stat-card.gold .stat-num { color: var(--gold); }
+  .stat-card.red .stat-num { color: var(--red); }
+
+  /* ENTITLEMENT TABLE */
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .periods-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+  }
+
+  .period-row {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: border-color 0.2s;
+  }
+
+  .period-row:hover { border-color: rgba(27,79,216,0.3); }
+
+  .period-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    flex: 1;
+  }
+
+  .period-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+  .badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .badge-used { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+  .badge-available { background: rgba(245,158,11,0.15); color: var(--gold); border: 1px solid rgba(245,158,11,0.3); }
+  .badge-future { background: rgba(148,163,184,0.1); color: var(--gray); border: 1px solid rgba(148,163,184,0.2); }
+  .badge-partial { background: rgba(37,99,235,0.15); color: #60A5FA; border: 1px solid rgba(37,99,235,0.3); }
+
+  .period-icon { font-size: 18px; width: 36px; text-align: center; }
+
+  /* REQUEST FORM */
+  .form-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+
+  .form-group.full { grid-column: 1 / -1; }
+
+  .form-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .form-control {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: white;
+    padding: 10px 14px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    transition: border-color 0.2s, background 0.2s;
+    direction: rtl;
+    width: 100%;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--blue-light);
+    background: rgba(37,99,235,0.08);
+  }
+
+  .form-control option { background: #1e2d4a; color: white; }
+
+  /* PRICE HINT */
+  .price-hint {
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--gold);
+    margin-top: 4px;
+    display: none;
+  }
+
+  /* TRAVELERS */
+  .travelers-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .trav-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border);
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+
+  .trav-btn:hover { background: rgba(27,79,216,0.3); }
+
+  .trav-num {
+    font-size: 22px;
+    font-weight: 700;
+    color: white;
+    min-width: 30px;
+    text-align: center;
+  }
+
+  /* SUBMIT */
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--blue), var(--blue-light));
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    margin-top: 0.5rem;
+  }
+
+  .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-submit:active { transform: translateY(0); }
+
+  /* HISTORY TABLE */
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .history-table th {
+    padding: 10px 14px;
+    text-align: right;
+    color: var(--text2);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .history-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  .history-table tr:last-child td { border-bottom: none; }
+  .history-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* SUCCESS TOAST */
+  .toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: var(--green);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 999;
+    pointer-events: none;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* EMPTY STATE */
+  .empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text2);
+    font-size: 13px;
+  }
+
+  /* CITY PRICES */
+  .cities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+    margin-bottom: 1.5rem;
+  }
+
+  .city-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .city-name { font-weight: 600; color: white; margin-bottom: 4px; font-size: 13px; }
+  .city-price { color: var(--gold); font-size: 11px; }
+
+  @media (max-width: 700px) {
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .emp-meta { flex-direction: column; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">
+    <div class="icon">✈</div>
+    تذاكر الطيران
+  </div>
+  <div class="emp-selector">
+    <button onclick="showOverview()" style="padding:6px 14px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);border-radius:8px;color:#FCD34D;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer;margin-left:10px">📊 ملخص الكل</button>
+    <label>الموظف:</label>
+    <select id="empSelect" onchange="loadEmployee()">
+      <option value="">اختر الموظف...</option>
+    </select>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- OVERVIEW SECTION -->
+  <div id="overviewSection" style="display:none">
+    <div class="section-title">ملخص جميع الموظفين — رصيد التذاكر</div>
+    <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+      <button onclick="filterOverview('all')" id="fAll" style="padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:rgba(255,255,255,0.08);color:white;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer">الكل</button>
+      <button onclick="filterOverview('available')" id="fAvail" style="padding:5px 14px;border-radius:20px;border:1px solid rgba(245,158,11,0.4);background:rgba(245,158,11,0.1);color:#FCD34D;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer">⭐ يستحق تذكرة</button>
+      <button onclick="filterOverview('used')" id="fUsed" style="padding:5px 14px;border-radius:20px;border:1px solid rgba(16,185,129,0.4);background:rgba(16,185,129,0.1);color:#6EE7B7;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer">✅ استخدم التذكرة</button>
+      <button onclick="filterOverview('notyet')" id="fNotYet" style="padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:rgba(148,163,184,0.1);color:var(--gray);font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer">⏳ لم يستحق بعد</button>
+    </div>
+    <div class="form-card" style="padding:0;overflow:hidden">
+      <table class="history-table" id="overviewTable">
+        <thead>
+          <tr>
+            <th>الرقم</th>
+            <th>الاسم</th>
+            <th>تاريخ الانضمام</th>
+            <th>سنوات الخدمة</th>
+            <th>تذاكر مستحقة</th>
+            <th>مستخدمة</th>
+            <th>متاحة</th>
+            <th>الاستحقاق القادم</th>
+            <th>الحالة</th>
+          </tr>
+        </thead>
+        <tbody id="overviewBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- EMPLOYEE CARD -->
+  <div class="emp-card" id="empCard" style="display:none">
+    <div class="emp-avatar" id="empAvatar"></div>
+    <div class="emp-info">
+      <div class="emp-name" id="empName"></div>
+      <div class="emp-meta">
+        <div class="emp-meta-item">📅 تاريخ الانضمام: <span id="empJoin"></span></div>
+        <div class="emp-meta-item">⏱ سنوات الخدمة: <span id="empYears"></span></div>
+        <div class="emp-meta-item">🆔 الرقم الوظيفي: <span id="empNat"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row" id="statsRow" style="display:none">
+    <div class="stat-card blue">
+      <div class="stat-num" id="statTotal">0</div>
+      <div class="stat-label">إجمالي التذاكر المستحقة</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-num" id="statUsed">0</div>
+      <div class="stat-label">تذاكر مستخدمة</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="stat-num" id="statAvail">0</div>
+      <div class="stat-label">تذاكر متاحة</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-num" id="statNext">—</div>
+      <div class="stat-label">الاستحقاق القادم</div>
+    </div>
+  </div>
+
+  <!-- ENTITLEMENT PERIODS -->
+  <div id="periodsSection" style="display:none">
+    <div class="section-title">سجل فترات الاستحقاق</div>
+    <div class="periods-list" id="periodsList"></div>
+  </div>
+
+  <!-- CITY PRICES -->
+  <div id="pricesSection" style="display:none">
+    <div class="section-title">دليل أسعار التذاكر (ريال سعودي — ذهاب وعودة)</div>
+    <div class="cities-grid">
+      <div class="city-card"><div class="city-name">🇧🇩 داكا</div><div class="city-price">1,400 – 2,600</div></div>
+      <div class="city-card"><div class="city-name">🇮🇳 نيودلهي</div><div class="city-price">1,600 – 3,200</div></div>
+      <div class="city-card"><div class="city-name">🇪🇬 القاهرة</div><div class="city-price">900 – 2,100</div></div>
+      <div class="city-card"><div class="city-name">🇪🇬 الإسكندرية</div><div class="city-price">1,100 – 2,300</div></div>
+      <div class="city-card"><div class="city-name">🇾🇪 عدن</div><div class="city-price">1,200 – 2,800</div></div>
+      <div class="city-card"><div class="city-name">🇾🇪 صنعاء</div><div class="city-price">1,300 – 3,000</div></div>
+      <div class="city-card"><div class="city-name">🇹🇷 إسطنبول</div><div class="city-price">1,800 – 4,000</div></div>
+    </div>
+  </div>
+
+  <!-- REQUEST FORM -->
+  <div id="formSection" style="display:none">
+    <div class="section-title">تقديم طلب تذكرة</div>
+    <div class="form-card">
+      <div class="form-grid">
+
+        <div class="form-group">
+          <div class="form-label">فترة الاستحقاق</div>
+          <select class="form-control" id="fPeriod">
+            <option value="">اختر الفترة...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">نوع التذكرة</div>
+          <select class="form-control" id="fType">
+            <option value="full">تذكرة كاملة</option>
+            <option value="half">نصف تذكرة (هذه السنة)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">الدولة والمدينة</div>
+          <select class="form-control" id="fCity" onchange="showPrice()">
+            <option value="">اختر المدينة...</option>
+            <option value="داكا 🇧🇩|1,400 – 2,600">داكا 🇧🇩</option>
+            <option value="نيودلهي 🇮🇳|1,600 – 3,200">نيودلهي 🇮🇳</option>
+            <option value="القاهرة 🇪🇬|900 – 2,100">القاهرة 🇪🇬</option>
+            <option value="الإسكندرية 🇪🇬|1,100 – 2,300">الإسكندرية 🇪🇬</option>
+            <option value="عدن 🇾🇪|1,200 – 2,800">عدن 🇾🇪</option>
+            <option value="صنعاء 🇾🇪|1,300 – 3,000">صنعاء 🇾🇪</option>
+            <option value="إسطنبول 🇹🇷|1,800 – 4,000">إسطنبول 🇹🇷</option>
+          </select>
+          <div class="price-hint" id="priceHint">💰 السعر المرجعي: —</div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">عدد المسافرين</div>
+          <div class="travelers-row">
+            <button class="trav-btn" onclick="changeTrav(-1)">−</button>
+            <div class="trav-num" id="travNum">1</div>
+            <button class="trav-btn" onclick="changeTrav(1)">+</button>
+            <span style="font-size:12px;color:var(--text2)">شخص</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">تاريخ المغادرة</div>
+          <input type="date" class="form-control" id="fDepart">
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">تاريخ العودة</div>
+          <input type="date" class="form-control" id="fReturn">
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">تأشيرة خروج وعودة</div>
+          <select class="form-control" id="fVisa">
+            <option value="yes">نعم — مطلوبة</option>
+            <option value="no">لا — غير مطلوبة</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">نوع الاستثناء</div>
+          <select class="form-control" id="fException">
+            <option value="none">لا يوجد</option>
+            <option value="early">طلب مبكر (قبل موعد الاستحقاق)</option>
+            <option value="split">نصف مقدم ونصف لاحق</option>
+          </select>
+        </div>
+
+        <div class="form-group full">
+          <div class="form-label">ملاحظات</div>
+          <input type="text" class="form-control" id="fNotes" placeholder="أي ملاحظات إضافية...">
+        </div>
+
+      </div>
+      <button class="btn-submit" onclick="submitRequest()">✈ تقديم الطلب</button>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div id="historySection" style="display:none">
+    <div class="section-title">سجل الطلبات</div>
+    <div class="form-card" style="padding: 0; overflow: hidden;">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>الفترة</th>
+            <th>المدينة</th>
+            <th>تاريخ السفر</th>
+            <th>المسافرون</th>
+            <th>النوع</th>
+            <th>التأشيرة</th>
+            <th>الاستثناء</th>
+            <th>الحالة</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div id="emptyState" style="text-align:center; padding:4rem 2rem; color:var(--text2)">
+    <div style="font-size:48px; margin-bottom:1rem;">✈</div>
+    <div style="font-size:16px; font-weight:600; margin-bottom:8px; color:var(--text)">اختر موظفاً للبدء</div>
+    <div style="font-size:13px;">اختر اسم الموظف من القائمة أعلاه لعرض رصيده وتقديم طلب</div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const EMPLOYEES = [
+  { id: "100116", name: "Yazen Aldawood", joinDate: "2026-04-12" },
+  { id: "100130", name: "Moahmmed Omar", joinDate: "2026-02-26" },
+  { id: "100129", name: "Omar Khalid", joinDate: "2025-12-16" },
+  { id: "100128", name: "Abdullah Taha", joinDate: "2025-12-14" },
+  { id: "100127", name: "Abdulrahman Alsuwayyid", joinDate: "2025-12-11" },
+  { id: "100126", name: "Tasin AlRafid", joinDate: "2025-11-26" },
+  { id: "100124", name: "Ahmed Mohammed", joinDate: "2025-11-09" },
+  { id: "100122", name: "Muhammad Muneeb", joinDate: "2025-11-02" },
+  { id: "100121", name: "Mohammed Othman", joinDate: "2025-09-29" },
+  { id: "100119", name: "Tanvir Hosen Afchar", joinDate: "2025-08-18" },
+  { id: "100120", name: "Zain Alabden Allahbi", joinDate: "2025-09-01" },
+  { id: "100115", name: "Osama Alsuliman", joinDate: "2025-08-24" },
+  { id: "100112", name: "Wael Kenda", joinDate: "2025-04-08" },
+  { id: "100111", name: "Mohammed Faraj", joinDate: "2025-01-05" },
+  { id: "100110", name: "Muhammad Nabeel", joinDate: "2024-12-02" },
+  { id: "100108", name: "Omar Rawashdeh", joinDate: "2024-11-25" },
+  { id: "100104", name: "Reda Elshehawy", joinDate: "2024-08-01" },
+  { id: "100103", name: "Ahmed Mabrouk", joinDate: "2024-07-07" },
+  { id: "10098", name: "Irfan Syed", joinDate: "2024-06-30" },
+  { id: "10097", name: "Prafull Chaudhari", joinDate: "2024-06-23" },
+  { id: "10089", name: "Kamran Miah", joinDate: "2023-10-22" },
+  { id: "10019", name: "Yousef AlSughayir", joinDate: "2019-10-21" },
+  { id: "10069", name: "Nader Almutairi", joinDate: "2024-01-03" },
+  { id: "10040", name: "Majed Ghazi", joinDate: "2021-08-15" },
+  { id: "10055", name: "Rubal Hossain", joinDate: "2022-03-24" },
+  { id: "10048", name: "Jani Khan", joinDate: "2022-03-16" },
+  { id: "10022", name: "Zakariya Amin", joinDate: "2020-01-10" },
+  { id: "10067", name: "Ali Raza", joinDate: "2022-12-26" },
+  { id: "10084", name: "Mohamed ElHashemy", joinDate: "2023-09-03" },
+  { id: "10088", name: "Khalid Alansari", joinDate: "2023-10-15" },
+  { id: "10083", name: "Mustafa Mahmoud", joinDate: "2023-08-07" },
+  { id: "10079", name: "Abdulrahman Amin", joinDate: "2023-06-04" },
+  { id: "10062", name: "Hebah Nabil", joinDate: "2023-03-01" },
+  { id: "10086", name: "Marwan Al Duhailan", joinDate: "2023-09-04" },
+  { id: "10068", name: "Omar Sharrab", joinDate: "2023-01-15" },
+  { id: "10054", name: "Abdullah Alshaiji", joinDate: "2022-06-19" },
+  { id: "10059", name: "Hasaan Saeed", joinDate: "2022-06-12" },
+  { id: "10046", name: "Muhammad Azeemudin", joinDate: "2022-01-04" },
+  { id: "10007", name: "Muneer Alowa", joinDate: "2020-09-01" },
+  { id: "10041", name: "Rami Bin Yousef", joinDate: "2021-10-21" },
+  { id: "10045", name: "Ebrahim Khairy", joinDate: "2022-01-04" },
+  { id: "10001", name: "Faisal Al Amer", joinDate: "2018-01-01" },
+];
+
+const CITY_PRICES = {
+  "داكا": "1,400 – 2,600 ريال",
+  "نيودلهي": "1,600 – 3,200 ريال",
+  "القاهرة": "900 – 2,100 ريال",
+  "الإسكندرية": "1,100 – 2,300 ريال",
+  "عدن": "1,200 – 2,800 ريال",
+  "صنعاء": "1,300 – 3,000 ريال",
+  "إسطنبول": "1,800 – 4,000 ريال",
+};
+
+// Storage key
+const STORAGE_KEY = 'airtickets_requests_v2';
+
+let currentEmp = null;
+let travelers = 1;
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  const sel = document.getElementById('empSelect');
+  EMPLOYEES.forEach(e => {
+    const opt = document.createElement('option');
+    opt.value = e.id;
+    opt.textContent = e.name;
+    sel.appendChild(opt);
+  });
+}
+
+// ============================================================
+// LOAD EMPLOYEE
+// ============================================================
+function loadEmployee() {
+  const id = parseInt(document.getElementById('empSelect').value);
+  if (!id) {
+    showEmpty(); return;
+  }
+  currentEmp = EMPLOYEES.find(e => e.id === id);
+  if (!currentEmp) return;
+
+  travelers = 1;
+  document.getElementById('travNum').textContent = 1;
+
+  renderEmpCard();
+  renderStats();
+  renderPeriods();
+  renderForm();
+  renderHistory();
+  hideEmpty();
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function yearsService(joinDate) {
+  const join = new Date(joinDate);
+  const now = new Date();
+  return (now - join) / (1000 * 60 * 60 * 24 * 365.25);
+}
+
+function formatDate(d) {
+  if (!d) return '—';
+  const date = new Date(d);
+  return date.toLocaleDateString('ar-SA', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function getInitials(name) {
+  return name.split(' ').map(w => w[0]).join('').slice(0, 2);
+}
+
+function getPeriods(joinDate) {
+  const join = new Date(joinDate);
+  const now = new Date();
+  const periods = [];
+  let i = 2;
+  while (true) {
+    const startY = join.getFullYear() + (i - 2);
+    const endY = join.getFullYear() + i;
+    const eligibleDate = new Date(join);
+    eligibleDate.setFullYear(join.getFullYear() + i);
+    if (eligibleDate > new Date(now.getFullYear() + 10, 0, 1)) break;
+    periods.push({
+      label: `${startY} – ${endY}`,
+      eligibleDate,
+      isFuture: eligibleDate > now,
+    });
+    i += 2;
+  }
+  return periods;
+}
+
+function getRequests(empId) {
+  const all = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  return all.filter(r => r.empId === empId);
+}
+
+function saveRequest(req) {
+  const all = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  all.push(req);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function renderEmpCard() {
+  const e = currentEmp;
+  const yrs = yearsService(e.joinDate);
+  document.getElementById('empAvatar').textContent = getInitials(e.name);
+  document.getElementById('empName').textContent = e.name;
+  document.getElementById('empJoin').textContent = formatDate(e.joinDate);
+  document.getElementById('empYears').textContent = yrs.toFixed(1) + ' سنة';
+  document.getElementById('empNat').textContent = e.id;
+  document.getElementById('empCard').style.display = 'flex';
+  document.getElementById('statsRow').style.display = 'grid';
+}
+
+function renderStats() {
+  const periods = getPeriods(currentEmp.joinDate);
+  const now = new Date();
+  const eligiblePeriods = periods.filter(p => !p.isFuture);
+  const requests = getRequests(currentEmp.id);
+  const usedPeriods = requests.map(r => r.period);
+  const used = usedPeriods.length;
+  const avail = eligiblePeriods.length - used;
+  const nextFuture = periods.find(p => p.isFuture);
+
+  document.getElementById('statTotal').textContent = eligiblePeriods.length;
+  document.getElementById('statUsed').textContent = used;
+  document.getElementById('statAvail').textContent = Math.max(0, avail);
+  document.getElementById('statNext').textContent = nextFuture
+    ? formatDate(nextFuture.eligibleDate)
+    : '—';
+}
+
+function renderPeriods() {
+  const periods = getPeriods(currentEmp.joinDate);
+  const requests = getRequests(currentEmp.id);
+  const usedMap = {};
+  requests.forEach(r => usedMap[r.period] = r);
+
+  const list = document.getElementById('periodsList');
+  list.innerHTML = '';
+
+  periods.forEach(p => {
+    const isUsed = !!usedMap[p.label];
+    const req = usedMap[p.label];
+    const div = document.createElement('div');
+    div.className = 'period-row';
+
+    let badge = '', icon = '';
+    if (p.isFuture) {
+      badge = `<span class="badge badge-future">⏳ لم تُستحق بعد</span>`;
+      icon = '🔒';
+    } else if (isUsed) {
+      const isPartial = req && req.ticketType === 'half';
+      badge = isPartial
+        ? `<span class="badge badge-partial">½ مستخدمة جزئياً</span>`
+        : `<span class="badge badge-used">✓ مستخدمة</span>`;
+      icon = isPartial ? '⚡' : '✅';
+    } else {
+      badge = `<span class="badge badge-available">★ متاحة</span>`;
+      icon = '🎫';
+    }
+
+    div.innerHTML = `
+      <div class="period-icon">${icon}</div>
+      <div style="flex:1">
+        <div class="period-label">فترة ${p.label}</div>
+        <div class="period-sub">تاريخ الاستحقاق: ${formatDate(p.eligibleDate)}${isUsed ? ' · ' + (req.city||'') + ' · ' + formatDate(req.departDate) : ''}</div>
+      </div>
+      ${badge}
+    `;
+    list.appendChild(div);
+  });
+
+  document.getElementById('periodsSection').style.display = 'block';
+  document.getElementById('pricesSection').style.display = 'block';
+}
+
+function renderForm() {
+  const periods = getPeriods(currentEmp.joinDate);
+  const now = new Date();
+  const requests = getRequests(currentEmp.id);
+  const usedPeriods = requests.map(r => r.period);
+
+  const sel = document.getElementById('fPeriod');
+  sel.innerHTML = '<option value="">اختر الفترة...</option>';
+
+  // Available periods (eligible and not fully used)
+  periods.forEach(p => {
+    const req = requests.find(r => r.period === p.label);
+    const isHalfUsed = req && req.ticketType === 'half';
+    const isFullyUsed = req && req.ticketType === 'full';
+
+    if (!isFullyUsed) {
+      const opt = document.createElement('option');
+      opt.value = p.label;
+      if (p.isFuture) {
+        opt.textContent = `${p.label} (استثناء — قبل الموعد)`;
+        opt.style.color = '#F59E0B';
+      } else if (isHalfUsed) {
+        opt.textContent = `${p.label} (النصف الثاني متبقي)`;
+        opt.style.color = '#60A5FA';
+      } else {
+        opt.textContent = p.label;
+      }
+      sel.appendChild(opt);
+    }
+  });
+
+  document.getElementById('formSection').style.display = 'block';
+}
+
+function renderHistory() {
+  const requests = getRequests(currentEmp.id);
+  const body = document.getElementById('historyBody');
+
+  if (requests.length === 0) {
+    body.innerHTML = `<tr><td colspan="8" class="empty">لا توجد طلبات بعد</td></tr>`;
+  } else {
+    body.innerHTML = requests.map(r => `
+      <tr>
+        <td>${r.period}</td>
+        <td>${r.city || '—'}</td>
+        <td>${formatDate(r.departDate)}</td>
+        <td style="text-align:center">${r.travelers}</td>
+        <td>${r.ticketType === 'full' ? 'كاملة' : 'نصف'}</td>
+        <td>${r.visa === 'yes' ? '✅' : '❌'}</td>
+        <td>${r.exception === 'none' ? '—' : r.exception === 'early' ? '⚠ مبكر' : '½+½'}</td>
+        <td><span class="badge badge-used">مقدّم</span></td>
+      </tr>
+    `).join('');
+  }
+
+  document.getElementById('historySection').style.display = 'block';
+}
+
+// ============================================================
+// ACTIONS
+// ============================================================
+function showPrice() {
+  const val = document.getElementById('fCity').value;
+  const hint = document.getElementById('priceHint');
+  if (!val) { hint.style.display = 'none'; return; }
+  const cityName = val.split('|')[0].replace(/[^\u0600-\u06FF ]/g, '').trim();
+  const price = val.split('|')[1] || '';
+  hint.textContent = `💰 السعر المرجعي: ${price} ريال`;
+  hint.style.display = 'block';
+}
+
+function changeTrav(n) {
+  travelers = Math.max(1, Math.min(10, travelers + n));
+  document.getElementById('travNum').textContent = travelers;
+}
+
+function submitRequest() {
+  const period = document.getElementById('fPeriod').value;
+  const city = document.getElementById('fCity').value.split('|')[0];
+  const ticketType = document.getElementById('fType').value;
+  const departDate = document.getElementById('fDepart').value;
+  const returnDate = document.getElementById('fReturn').value;
+  const visa = document.getElementById('fVisa').value;
+  const exception = document.getElementById('fException').value;
+  const notes = document.getElementById('fNotes').value;
+
+  if (!period) { showToast('اختر فترة الاستحقاق', true); return; }
+  if (!city) { showToast('اختر المدينة', true); return; }
+  if (!departDate) { showToast('اختر تاريخ المغادرة', true); return; }
+
+  const req = {
+    id: Date.now(),
+    empId: currentEmp.id,
+    period, city, ticketType, departDate, returnDate,
+    travelers, visa, exception, notes,
+    submittedAt: new Date().toISOString(),
+  };
+
+  saveRequest(req);
+  showToast('✅ تم تقديم الطلب بنجاح!');
+
+  // Reset form
+  document.getElementById('fPeriod').value = '';
+  document.getElementById('fCity').value = '';
+  document.getElementById('fDepart').value = '';
+  document.getElementById('fReturn').value = '';
+  document.getElementById('fNotes').value = '';
+  document.getElementById('priceHint').style.display = 'none';
+  travelers = 1;
+  document.getElementById('travNum').textContent = 1;
+
+  // Refresh
+  renderStats();
+  renderPeriods();
+  renderForm();
+  renderHistory();
+}
+
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = isError ? '#EF4444' : '#10B981';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function showEmpty() {
+  document.getElementById('emptyState').style.display = 'block';
+  document.getElementById('empCard').style.display = 'none';
+  document.getElementById('statsRow').style.display = 'none';
+  document.getElementById('periodsSection').style.display = 'none';
+  document.getElementById('pricesSection').style.display = 'none';
+  document.getElementById('formSection').style.display = 'none';
+  document.getElementById('historySection').style.display = 'none';
+}
+
+function hideEmpty() {
+  document.getElementById('emptyState').style.display = 'none';
+}
+
+function showOverview() {
+  // Hide employee sections
+  document.getElementById('empCard').style.display = 'none';
+  document.getElementById('statsRow').style.display = 'none';
+  document.getElementById('periodsSection').style.display = 'none';
+  document.getElementById('pricesSection').style.display = 'none';
+  document.getElementById('formSection').style.display = 'none';
+  document.getElementById('historySection').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('empSelect').value = '';
+  currentEmp = null;
+
+  // Build overview
+  const tbody = document.getElementById('overviewBody');
+  tbody.innerHTML = '';
+
+  EMPLOYEES.forEach(e => {
+    const yrs = yearsService(e.joinDate);
+    const periods = getPeriods(e.joinDate);
+    const now = new Date();
+    const eligiblePeriods = periods.filter(p => !p.isFuture);
+    const requests = getRequests(e.id);
+    const used = requests.length;
+    const avail = Math.max(0, eligiblePeriods.length - used);
+    const nextFuture = periods.find(p => p.isFuture);
+    const notStarted = yrs < 2;
+
+    let statusBadge = '';
+    let rowStatus = '';
+    if (notStarted) {
+      statusBadge = '<span class="badge badge-future">⏳ لم يستحق بعد</span>';
+      rowStatus = 'notyet';
+    } else if (avail > 0) {
+      statusBadge = '<span class="badge badge-available">⭐ يستحق تذكرة</span>';
+      rowStatus = 'available';
+    } else {
+      statusBadge = '<span class="badge badge-used">✅ استخدم الكل</span>';
+      rowStatus = 'used';
+    }
+
+    const tr = document.createElement('tr');
+    tr.dataset.status = rowStatus;
+    tr.innerHTML = `
+      <td style="color:var(--text2);font-size:12px">${e.id}</td>
+      <td><strong style="cursor:pointer;color:#60A5FA" onclick="selectEmp('${e.id}')">${e.name}</strong></td>
+      <td>${formatDate(e.joinDate)}</td>
+      <td>${yrs.toFixed(1)}</td>
+      <td style="text-align:center">${eligiblePeriods.length}</td>
+      <td style="text-align:center;color:var(--green)">${used}</td>
+      <td style="text-align:center;color:${avail > 0 ? '#FCD34D' : 'var(--gray)'};font-weight:700">${avail}</td>
+      <td style="font-size:12px">${nextFuture ? formatDate(nextFuture.eligibleDate) : '—'}</td>
+      <td>${statusBadge}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('overviewSection').style.display = 'block';
+}
+
+function filterOverview(type) {
+  const rows = document.querySelectorAll('#overviewBody tr');
+  rows.forEach(row => {
+    if (type === 'all' || row.dataset.status === type) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
+function selectEmp(id) {
+  document.getElementById('overviewSection').style.display = 'none';
+  document.getElementById('empSelect').value = id;
+  loadEmployee();
+}
+
+init();
+</script>
+</body>
+</html>
